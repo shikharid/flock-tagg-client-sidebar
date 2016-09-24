@@ -58,6 +58,7 @@ angular.
 				self.newTagValue = "";
 				self.attachment = "";
 				self.message = "";
+        self.allAttachments = [];
 				self.messageDetails = {
 					to: undefined,
 					from: undefined,
@@ -69,18 +70,18 @@ angular.
 				};
 
 				var queryParams = $location.search();
-
+        /*
 				var flockEvent = JSON.parse(queryParams.flockEvent);
 				console.log(flockEvent);
 
 				self.messageDetails.from = flockEvent.userId; self.messageDetails.fromName = flockEvent.userName;
 				self.messageDetails.to = flockEvent.chat; self.messageDetails.toName = flockEvent.chatName;
+        */
 
-				
 				TagsFactory.get({'userId': 'u:v77sdynhzi74zy44'}, function(data) {
 					console.log(data);
 					self.allTags = data;
-					
+
 				});
 
 				self.submit = function() {
@@ -98,7 +99,7 @@ angular.
 							"content_json": {
 								"message": data.id,
 								"attachments": self.messageDetails.attachments,
-								"tags": tags 
+								"tags": tags
 							}
 						}
 						ContentFactory.save(cdata, function(data) {
@@ -134,7 +135,7 @@ angular.
 				};
 
 				$scope.fileNameChanged = function () {
-					
+
 					var fd = new FormData();
         			fd.append('file_data', self.attachment);
         			fd.append('userId', 'u:v77sdynhzi74zy44');
@@ -142,13 +143,10 @@ angular.
 					Restangular.one('file/').withHttpConfig({transformRequest: angular.identity})
                     .customPOST(fd, '', undefined, {'Content-Type': undefined}).then(function(data) {
                     	self.messageDetails.attachments.push(data.id);
+                      self.allAttachments.push(data);
                     });
 				};
 			}
 		]
 
 	});
-
-
-
-
