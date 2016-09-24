@@ -11,5 +11,10 @@ angular.module("taggApp").config(['$locationProvider', '$resourceProvider', 'Res
         });
         RestangularProvider.setBaseUrl('https://32915b8c.ngrok.io/');
         $resourceProvider.defaults.stripTrailingSlashes = false;
+    }]).run(['$rootScope', function (root) {
+    	root.$on('searchSelectEvent', function (event, data) {
+    		console.log(data);
+    		root.$emit('modifyContentEvent', data);
+    	});
     }]);
 
