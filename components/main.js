@@ -33,15 +33,31 @@ angular.module('taggApp').filter('propsFilter', function() {
     return out;
   };
 });
+angular.module('taggApp').directive('fileModel', ['$parse', function ($parse) {
+return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+        var model = $parse(attrs.fileModel);
+        var modelSetter = model.assign;
 
+        element.bind('change', function(){
+            scope.$apply(function(){
+                modelSetter(scope, element[0].files[0]);
+            });
+        });
+    }
+};
+}]);
 angular.
 	module('taggApp').
 	component('home', {
 		templateUrl: 'templates/base.html',
-		controller: ['$location', '$scope',
-			function HomeController($location, $scope) {
+		controller: ['$location', '$scope', 'TagsFactory', 'FileFactory', 'Restangular', 'MessageFactory', 'ContentFactory',
+			function HomeController($location, $scope, TagsFactory, FileFactory, Restangular, MessageFactory, ContentFactory) {
 				var self = this;
-				self.selectedtags = {};
+				self.newTagValue = "";
+				self.attachment = "";
+				self.message = "";
 				self.messageDetails = {
 					to: undefined,
 					from: undefined,
@@ -52,45 +68,61 @@ angular.
 					messageId: undefined
 				};
 
-				self.allTags = [
-					{name: "server", id: 1},
-					{name: "data", id: 2},
-					{name: "logs", id: 3},
-					{name: "history", id: 4},
-					{name: "photos", id: 5}
-				];
-
-				$scope.onTagRemove = function (removedTag) {
-					var idx = self.messageDetails.tags.indexOf(removedTag.id);
-					if(idx > -1) self.messageDetails.tags.splice(idx, 1);
-					console.log(self.messageDetails.tags);
-				};
-
-				$scope.onTagSelect = function (selectedTag) {
-					self.messageDetails.tags.push(selectedTag.id);
-					console.log(self.messageDetails.tags);
-				};
-
-				$scope.searchTag = function (searchString) {
-
-				};
-
 				var queryParams = $location.search();
-        //console.log(queryParams);
+
 				var flockEvent = JSON.parse(queryParams.flockEvent);
 				console.log(flockEvent);
 
 				self.messageDetails.from = flockEvent.userId; self.messageDetails.fromName = flockEvent.userName;
 				self.messageDetails.to = flockEvent.chat; self.messageDetails.toName = flockEvent.chatName;
 
+				
+				TagsFactory.get({'userId': 'u:v77sdynhzi74zy44'}, function(data) {
+					console.log(data);
+					self.allTags = data;
+					
+				});
+
 				self.submit = function() {
-					// save the message and update messageId
+					var message = {
+						'message': self.message,
+						'userId': 'u:v77sdynhzi74zy44'
+					};
+					MessageFactory.save(message, function(data) {
+						self.messageDetails.messageId = data.id;
+						console.log(self.messageDetails);
+						var tags = self.messageDetails.tags.map(function(val) {return val.id});
+						var cdata = {
+							"to":  self.messageDetails.to,
+							"userId": 'u:v77sdynhzi74zy44',
+							"content_json": {
+								"message": data.id,
+								"attachments": self.messageDetails.attachments,
+								"tags": tags 
+							}
+						}
+						ContentFactory.save(cdata, function(data) {
+							console.log(data);
+							flock.close();
+						});
+					});
+
 
 					// form submit api end point
 				};
 
 				self.saveTag = function () {
 					// on click event to save that tag in tags[] and update in db
+					var tag = {
+						'tag_value': self.newTagValue,
+						'userId': 'u:v77sdynhzi74zy44'
+					};
+					TagsFactory.save(tag, function (data) {
+						self.messageDetails.tags.push(data);
+						self.newTagValue = "";
+						self.allTags.push(data);
+						console.log(self.messageDetails.tags);
+					});
 				};
 
 				self.uploadAttachment = function () {
@@ -100,7 +132,23 @@ angular.
 				self.getTags = function () {
 					// search for the tags
 				};
+
+				$scope.fileNameChanged = function () {
+					
+					var fd = new FormData();
+        			fd.append('file_data', self.attachment);
+        			fd.append('userId', 'u:v77sdynhzi74zy44');
+					console.log(fd);
+					Restangular.one('file/').withHttpConfig({transformRequest: angular.identity})
+                    .customPOST(fd, '', undefined, {'Content-Type': undefined}).then(function(data) {
+                    	self.messageDetails.attachments.push(data.id);
+                    });
+				};
 			}
 		]
 
 	});
+
+
+
+
