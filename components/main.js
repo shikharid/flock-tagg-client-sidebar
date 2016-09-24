@@ -38,10 +38,10 @@ angular.
 	module('taggApp').
 	component('home', {
 		templateUrl: 'templates/base.html',
-		controller: ['$location', '$scope',
-			function HomeController($location, $scope) {
+		controller: ['$location', '$scope', 'TagsFactory',
+			function HomeController($location, $scope, TagsFactory) {
 				var self = this;
-				self.selectedtags = {};
+				self.newTagValue = "";
 				self.messageDetails = {
 					to: undefined,
 					from: undefined,
@@ -52,36 +52,20 @@ angular.
 					messageId: undefined
 				};
 
-				self.allTags = [
-					{name: "server", id: 1},
-					{name: "data", id: 2},
-					{name: "logs", id: 3},
-					{name: "history", id: 4},
-					{name: "photos", id: 5}
-				];
-
-				$scope.onTagRemove = function (removedTag) {
-					var idx = self.messageDetails.tags.indexOf(removedTag.id);
-					if(idx > -1) self.messageDetails.tags.splice(idx, 1);
-					console.log(self.messageDetails.tags);
-				};
-
-				$scope.onTagSelect = function (selectedTag) {
-					self.messageDetails.tags.push(selectedTag.id);
-					console.log(self.messageDetails.tags);
-				};
-
-				$scope.searchTag = function (searchString) {
-
-				};
-
 				var queryParams = $location.search();
-        console.log(queryParams);
+
 				var flockEvent = JSON.parse(queryParams.flockEvent);
 				console.log(flockEvent);
 
 				self.messageDetails.from = flockEvent.userId; self.messageDetails.fromName = flockEvent.userName;
 				self.messageDetails.to = flockEvent.chat; self.messageDetails.toName = flockEvent.chatName;
+
+				
+				TagsFactory.get({'userId': 'u:v77sdynhzi74zy44'}, function(data) {
+					console.log(data);
+					self.allTags = data;
+					
+				});
 
 				self.submit = function() {
 					// save the message and update messageId
@@ -91,6 +75,16 @@ angular.
 
 				self.saveTag = function () {
 					// on click event to save that tag in tags[] and update in db
+					var tag = {
+						'tag_value': self.newTagValue,
+						'userId': 'u:v77sdynhzi74zy44'
+					};
+					TagsFactory.save(tag, function (data) {
+						self.messageDetails.tags.push(data);
+						self.newTagValue = "";
+						self.allTags.push(data);
+						console.log(self.messageDetails.tags);
+					});
 				};
 
 				self.uploadAttachment = function () {
@@ -104,6 +98,10 @@ angular.
 		]
 
 	});
+
+
+
+
 //sidebar
 	angular.
 		module('taggApp').
