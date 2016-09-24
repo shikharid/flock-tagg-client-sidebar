@@ -52,14 +52,6 @@ angular.
 					messageId: undefined
 				};
 
-				self.allTags = [
-					{tag_value: "server", id: 1},
-					{tag_value: "data", id: 2},
-					{tag_value: "logs", id: 3},
-					{tag_value: "history", id: 4},
-					{tag_value: "photos", id: 5}
-				];
-
 				var queryParams = $location.search();
 
 				var flockEvent = JSON.parse(queryParams.flockEvent);
@@ -74,18 +66,7 @@ angular.
 					self.allTags = data;
 					
 				});
-				/*
-				$scope.onTagRemove = function (removedTag) {
-					var idx = self.messageDetails.tags.indexOf(removedTag.id);
-					if(idx > -1) self.messageDetails.tags.splice(idx, 1);
-					console.log(self.messageDetails.tags);
-				};
 
-				$scope.onTagSelect = function (selectedTag) {
-					self.messageDetails.tags.push(selectedTag.id);
-					console.log(self.messageDetails.tags);
-				};
-				*/
 				self.submit = function() {
 					// save the message and update messageId
 
@@ -127,6 +108,30 @@ angular.
 		component('sidebar', {
 			templateUrl: 'templates/sidebar.html',
 			controller: ['$scope', '$http', function($scope,$http){
+        self.selectedtags = {};
+        self.allTags = [
+					{name: "server", id: 1},
+					{name: "data", id: 2},
+					{name: "logs", id: 3},
+					{name: "history", id: 4},
+					{name: "photos", id: 5}
+				];
+
+				$scope.onTagRemove = function (removedTag) {
+					var idx = self.messageDetails.tags.indexOf(removedTag.id);
+					if(idx > -1) self.messageDetails.tags.splice(idx, 1);
+					console.log(self.messageDetails.tags);
+				};
+
+				$scope.onTagSelect = function (selectedTag) {
+					self.messageDetails.tags.push(selectedTag.id);
+					console.log(self.messageDetails.tags);
+				};
+
+				$scope.searchTag = function (searchString) {
+
+				};
+
 
 			  $scope.data = '{"files":[{"id":"123","file_data":"http://www.example.com/dir/file.html"},{"id":"456","file_data":"http://www.anotherexample.com/directory/hello.img"}]}';
 				$scope.message = '{"messages":[{"id":"123","message_content":"let the game begin brhebv vreuhv vrever bnvuriuev nvernvrr rvnunuie newfneufnun nfiueifuj nfenfe f3woihw"},{"id":"456","message_content":"it was elementary watson"}]}';
