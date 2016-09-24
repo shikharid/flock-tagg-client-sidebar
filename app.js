@@ -10,5 +10,6 @@ angular.module('taggApp', [
     'smart-table',
     'autocomplete',
     'ui.select',
-    'ngSanitize'
+    'ngSanitize',
+    'ngResource'
 ]);
