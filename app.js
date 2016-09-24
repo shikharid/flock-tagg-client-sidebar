@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('nodalOfficerPortal', [
+angular.module('taggApp', [
     'ngCookies',
     'restangular',
     'ngRoute',

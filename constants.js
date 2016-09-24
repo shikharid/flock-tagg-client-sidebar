@@ -4,15 +4,15 @@
 
 'use strict';
 
-angular.module('taggPortal').constant("API", {
+angular.module('taggApp').constant("API", {
 
 });
 
-angular.module('taggPortal').constant("TEMPLATES", {
+angular.module('taggApp').constant("TEMPLATES", {
 
 });
 
-angular.module('taggPortal').constant("URLS", {
+angular.module('taggApp').constant("URLS", {
 
 });
 

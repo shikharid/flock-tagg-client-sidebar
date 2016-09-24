@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('taggPortal').factory('AuthenticationService', ['Restangular', 'API', '$cookies', '$rootScope',
+angular.module('taggApp').factory('AuthenticationService', ['Restangular', 'API', '$cookies', '$rootScope',
     function (Restangular, API, cookies, rootScope) {
 
 
