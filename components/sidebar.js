@@ -4,6 +4,7 @@ angular.
   component('sidebar', {
     templateUrl: 'templates/sidebar.html',
     controller: ['$scope', '$http', function($scope,$http){
+      var url="http://172.16.153.248:8000/";
       self.selectedtags = {};
       self.allTags = [
         {name: "server", id: 1},
@@ -42,7 +43,7 @@ angular.
               userId: 'u:v77sdynhzi74zy44',
               tags: [1,2]
           };
-        $http.post("http://172.16.153.248:8000/search/file/", params , {async:true}).success(function(data){
+        $http.post(url+"search/file/", params , {async:true}).success(function(data){
             $scope.data = data;
             console.log($scope.data[0].file_data);
             $scope.files = [];
@@ -68,7 +69,7 @@ angular.
           userId: 'u:v77sdynhzi74zy44',
           tags: [1,2]
           };
-        $http.post("http://172.16.153.248:8000/search/message/", params,{async:true}).success(function(message){
+        $http.post(url +"search/message/", params,{async:true}).success(function(message){
             $scope.message = message;
             $scope.messages = [];
             //var data = JSON.parse($scope.message);
