@@ -11,5 +11,6 @@ angular.module('taggApp', [
     'autocomplete',
     'ui.select',
     'ngSanitize',
-    'ngResource'
+    'ngResource',
+    'angular-loading-bar'
 ]);

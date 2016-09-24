@@ -1,6 +1,6 @@
-<div class="box-body">
 <div class="row">
-	<div class="col-md-12 ">
+<div class="box box-default">
+	<div class="box box-header">
 		<form role="form">
 			<div class="form-group">
 				<div class="input-group" ng-submit="fillFiles();fillMessages();">
@@ -21,47 +21,51 @@
 			</div>
 		</form>
 	</div>
-</div>
+<div class="box-body" style="margin-right: 20px">
 
-<div class="row">
-	<div class="col-md-12">
-		<!-- files here -->
-		<ul class="list-group">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- files here -->
+			<ul class="list-group">
+						<li class="list-group-item list_head">
+
+							<span>Files</span>
+						</li>
+			    <a ng-repeat="file in files" ng-class="{'fadeOut' : skill.done}"  class="list-group-item">
+
+			      <span class="trunc">{{file.fileName}}
+			      <button class="btn btn-primary btn-xs pull-right" style="padding: 4px; margin-right: 4px;" data-ng-click="openUrl(file.file_data)">open</button>
+			      <button class="btn btn-primary btn-xs pull-right" style="padding: 4px; margin-right: 4px;" data-ng-click="broadcast({
+			    'content': file, 'type': 'FILE'
+			    })">attach</button></span>
+			    </a>
+			  </ul>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12" >
+			<!-- Messages here -->
+			<ul class="list-group">
 					<li class="list-group-item list_head">
 
-						<span>Files</span>
+						<span >Messages</span>
 					</li>
-		    <a ng-repeat="file in files" ng-class="{'fadeOut' : skill.done}"  class="list-group-item" data-ng-click="broadcast({
-		    'id': file.id, 'type': 'FILE', 'content': file.file_data
-		    })">
+		      <a ng-repeat="msg in messages" ng-class="{'fadeOut' : skill.done}"  class="list-group-item" data-ng-click="broadcast({
+		      	'type': 'MSG', 'content': msg
+		      })">
 
-		      <span class="trunc">{{file.fileName}}</span>
-		    </a>
-		  </ul>
+		        <span class="trunc">{{msg.message_content}}</span>
+		      </a>
+		    </ul>
+		</div>
 	</div>
+
+
+
+
+
+
 </div>
-
-<div class="row">
-	<div class="col-md-12">
-		<!-- Messages here -->
-		<ul class="list-group">
-				<li class="list-group-item list_head">
-
-					<span >Messages</span>
-				</li>
-	      <a ng-repeat="msg in messages" ng-class="{'fadeOut' : skill.done}"  class="list-group-item" data-ng-click="broadcast({
-	      	'id': msg.id, 'type': 'MSG', 'content': msg.message_content
-	      })">
-
-	        <span class="trunc">{{msg.message_content}}</span>
-	      </a>
-	    </ul>
-	</div>
 </div>
-
-
-
-
-
-
 </div>

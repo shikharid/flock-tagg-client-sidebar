@@ -52,12 +52,13 @@ angular.
 	module('taggApp').
 	component('home', {
 		templateUrl: 'templates/base.html',
-		controller: ['$location', '$scope', 'TagsFactory', 'FileFactory', 'Restangular', 'MessageFactory', 'ContentFactory',
-			function HomeController($location, $scope, TagsFactory, FileFactory, Restangular, MessageFactory, ContentFactory) {
+		controller: ['$location', '$scope', 'TagsFactory', 'FileFactory', 'Restangular', 'MessageFactory', 'ContentFactory', '$rootScope',
+			function HomeController($location, $scope, TagsFactory, FileFactory, Restangular, MessageFactory, ContentFactory, root) {
 				var self = this;
 				self.newTagValue = "";
 				self.attachment = "";
 				self.message = "";
+        self.allAttachments = [];
 				self.messageDetails = {
 					to: undefined,
 					from: undefined,
@@ -70,23 +71,36 @@ angular.
 
 				var queryParams = $location.search();
 
+				root.$on('searchSelectEvent', function (event, data) {
+		    		
+		    		if(data.data.type == "MSG") {
+						console.log("Here!");
+						self.message = data.data.content.message_content;
+					} else {
+						if(self.allAttachments.indexOf(data.data.content) < 0) {
+							self.allAttachments.push(data.data.content);
+						}
+					}
+		    	});
+        
 				var flockEvent = JSON.parse(queryParams.flockEvent);
 				console.log(flockEvent);
 
 				self.messageDetails.from = flockEvent.userId; self.messageDetails.fromName = flockEvent.userName;
 				self.messageDetails.to = flockEvent.chat; self.messageDetails.toName = flockEvent.chatName;
+				root.userId = flockEvent.userId || 'u:v77sdynhzi74zy44';
+        
 
-				
-				TagsFactory.get({'userId': 'u:v77sdynhzi74zy44'}, function(data) {
+				TagsFactory.get({'userId': root.userId}, function(data) {
 					console.log(data);
 					self.allTags = data;
-					
+
 				});
 
 				self.submit = function() {
 					var message = {
 						'message': self.message,
-						'userId': 'u:v77sdynhzi74zy44'
+						'userId': root.userId
 					};
 					MessageFactory.save(message, function(data) {
 						self.messageDetails.messageId = data.id;
@@ -94,11 +108,11 @@ angular.
 						var tags = self.messageDetails.tags.map(function(val) {return val.id});
 						var cdata = {
 							"to":  self.messageDetails.to,
-							"userId": 'u:v77sdynhzi74zy44',
+							"userId": root.userId,
 							"content_json": {
 								"message": data.id,
 								"attachments": self.messageDetails.attachments,
-								"tags": tags 
+								"tags": tags
 							}
 						}
 						ContentFactory.save(cdata, function(data) {
@@ -115,7 +129,7 @@ angular.
 					// on click event to save that tag in tags[] and update in db
 					var tag = {
 						'tag_value': self.newTagValue,
-						'userId': 'u:v77sdynhzi74zy44'
+						'userId': root.userId
 					};
 					TagsFactory.save(tag, function (data) {
 						self.messageDetails.tags.push(data);
@@ -134,21 +148,18 @@ angular.
 				};
 
 				$scope.fileNameChanged = function () {
-					
+
 					var fd = new FormData();
         			fd.append('file_data', self.attachment);
-        			fd.append('userId', 'u:v77sdynhzi74zy44');
+        			fd.append('userId', root.userId);
 					console.log(fd);
 					Restangular.one('file/').withHttpConfig({transformRequest: angular.identity})
                     .customPOST(fd, '', undefined, {'Content-Type': undefined}).then(function(data) {
                     	self.messageDetails.attachments.push(data.id);
+                      self.allAttachments.push(data);
                     });
 				};
 			}
 		]
 
 	});
-
-
-
-
