@@ -1,11 +1,14 @@
 <div class="box box-primary">
     <div class="box-header with-border">
-        <h2 class="box-title">To/From:</h2>
+        <h2 class="box-title">To:</h2>  {{ $ctrl.messageDetails.toName }}
     </div>
     <form role="form">
 	    <div class="box-body">
 	        <div class="form-group">
-	        	<textarea name="message" class="form-control" style="height: 200px">Message Here!</textarea>
+	        	<textarea name="message" 
+	        		class="form-control" 
+        			style="height: 200px"
+        			placeholder="Compose new message"></textarea>
 	        </div>
 	    </div>
 	    <div class="box-footer">
