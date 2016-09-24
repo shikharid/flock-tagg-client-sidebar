@@ -33,15 +33,31 @@ angular.module('taggApp').filter('propsFilter', function() {
     return out;
   };
 });
+angular.module('taggApp').directive('fileModel', ['$parse', function ($parse) {
+return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+        var model = $parse(attrs.fileModel);
+        var modelSetter = model.assign;
 
+        element.bind('change', function(){
+            scope.$apply(function(){
+                modelSetter(scope, element[0].files[0]);
+            });
+        });
+    }
+};
+}]);
 angular.
 	module('taggApp').
 	component('home', {
 		templateUrl: 'templates/base.html',
-		controller: ['$location', '$scope', 'TagsFactory',
-			function HomeController($location, $scope, TagsFactory) {
+		controller: ['$location', '$scope', 'TagsFactory', 'FileFactory', 'Restangular', 'MessageFactory', 'ContentFactory',
+			function HomeController($location, $scope, TagsFactory, FileFactory, Restangular, MessageFactory, ContentFactory) {
 				var self = this;
 				self.newTagValue = "";
+				self.attachment = "";
+				self.message = "";
 				self.messageDetails = {
 					to: undefined,
 					from: undefined,
@@ -68,7 +84,29 @@ angular.
 				});
 
 				self.submit = function() {
-					// save the message and update messageId
+					var message = {
+						'message': self.message,
+						'userId': 'u:v77sdynhzi74zy44'
+					};
+					MessageFactory.save(message, function(data) {
+						self.messageDetails.messageId = data.id;
+						console.log(self.messageDetails);
+						var tags = self.messageDetails.tags.map(function(val) {return val.id});
+						var cdata = {
+							"to":  self.messageDetails.to,
+							"userId": 'u:v77sdynhzi74zy44',
+							"content_json": {
+								"message": data.id,
+								"attachments": self.messageDetails.attachments,
+								"tags": tags 
+							}
+						}
+						ContentFactory.save(cdata, function(data) {
+							console.log(data);
+							flock.close();
+						});
+					});
+
 
 					// form submit api end point
 				};
@@ -93,6 +131,18 @@ angular.
 
 				self.getTags = function () {
 					// search for the tags
+				};
+
+				$scope.fileNameChanged = function () {
+					
+					var fd = new FormData();
+        			fd.append('file_data', self.attachment);
+        			fd.append('userId', 'u:v77sdynhzi74zy44');
+					console.log(fd);
+					Restangular.one('file/').withHttpConfig({transformRequest: angular.identity})
+                    .customPOST(fd, '', undefined, {'Content-Type': undefined}).then(function(data) {
+                    	self.messageDetails.attachments.push(data.id);
+                    });
 				};
 			}
 		]

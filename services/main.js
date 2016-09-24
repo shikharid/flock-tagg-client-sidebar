@@ -1,4 +1,4 @@
-var API_URL = "http://172.16.153.248:8000/";
+var API_URL = "https://32915b8c.ngrok.io/";
 var APP_NAME = "taggApp";
 
 angular.
