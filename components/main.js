@@ -39,6 +39,7 @@ angular.
 	component('home', {
 		templateUrl: 'templates/base.html',
 		controller: ['$location', '$scope',
+			function HomeController($location, $scope) {
 				var self = this;
 				self.selectedtags = {};
 				self.messageDetails = {
