@@ -8,7 +8,7 @@ angular.module('taggApp').filter('propsFilter', function() {
 
     if (angular.isArray(items)) {
       var keys = Object.keys(props);
-        
+
       items.forEach(function(item) {
         var itemMatches = false;
 
@@ -38,13 +38,7 @@ angular.
 	module('taggApp').
 	component('home', {
 		templateUrl: 'templates/base.html',
-<<<<<<< HEAD
-		controller: [
-			function homeController () {
-=======
 		controller: ['$location', '$scope',
-			function homeController ($location, $scope) {
->>>>>>> e2c939d1ba15ede3b620bee6d98e730144aef386
 				var self = this;
 				self.selectedtags = {};
 				self.messageDetails = {
@@ -77,7 +71,7 @@ angular.
 				};
 
 				$scope.searchTag = function (searchString) {
-					
+
 				};
 
 				var queryParams = $location.search();
@@ -89,7 +83,7 @@ angular.
 				self.messageDetails.to = flockEvent.chat; self.messageDetails.toName = flockEvent.chatName;
 
 				self.submit = function() {
-					// save the message and update messageId 
+					// save the message and update messageId
 
 					// form submit api end point
 				};
