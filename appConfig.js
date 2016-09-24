@@ -4,14 +4,10 @@
 
 'use strict';
 
-angular.module("taggApp").config(['API', 'TEMPLATES', 'URLS', '$routeProvider', '$locationProvider', 'RestangularProvider',
-    function (API, TEMPLATES, URLS, $routeProvider, $locationProvider, RestangularProvider) {
-
-    }]).run(['$rootScope', 'URLS', function ($rootScope, URLS) {
-            $rootScope.urls = URLS;]
-            $rootScope.cookieLifeTime = 15; // In Minutes
-            $locationProvider.html5Mode({
+angular.module("taggApp").config(['$locationProvider',
+    function ($locationProvider) {
+		$locationProvider.html5Mode({
                   enabled: true
-              });
+        });
     }]);
 
