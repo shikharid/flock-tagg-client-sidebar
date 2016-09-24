@@ -1,37 +1,4 @@
 'use strict';
-angular.module('taggApp').filter('propsFilter', function() {
-  return function(items, props) {
-    var out = [];
-
-    if (angular.isArray(items)) {
-      var keys = Object.keys(props);
-
-      items.forEach(function(item) {
-        var itemMatches = false;
-
-        for (var i = 0; i < keys.length; i++) {
-          var prop = keys[i];
-          var text = props[prop].toLowerCase();
-          if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
-            itemMatches = true;
-            break;
-          }
-        }
-
-        if (itemMatches) {
-          out.push(item);
-        }
-      });
-    } else {
-      // Let the output be the input untouched
-      out = items;
-    }
-
-    return out;
-  };
-});
-
-
 angular.
   module('taggApp').
   component('sidebar', {
@@ -75,7 +42,7 @@ angular.
               userId: 'u:v77sdynhzi74zy44',
               tags: [1,2]
           };
-        $http.post("http://172.16.153.248:8000/search/file/", params).success(function(data){
+        $http.post("http://172.16.153.248:8000/search/file/", params , {async:true}).success(function(data){
             $scope.data = data;
             console.log($scope.data[0].file_data);
             $scope.files = [];
@@ -101,7 +68,7 @@ angular.
           userId: 'u:v77sdynhzi74zy44',
           tags: [1,2]
           };
-        $http.post("http://172.16.153.248:8000/search/message/", params).success(function(message){
+        $http.post("http://172.16.153.248:8000/search/message/", params,{async:true}).success(function(message){
             $scope.message = message;
             $scope.messages = [];
             //var data = JSON.parse($scope.message);
