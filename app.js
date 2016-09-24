@@ -8,5 +8,7 @@ angular.module('taggApp', [
     'restangular',
     'ngRoute',
     'smart-table',
-    'autocomplete'
+    'autocomplete',
+    'ui.select',
+    'ngSanitize'
 ]);
