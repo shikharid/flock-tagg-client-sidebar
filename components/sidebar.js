@@ -4,9 +4,17 @@ angular.
   module('taggApp').
   component('sidebar', {
     templateUrl: 'templates/sidebar.html',
-    controller: ['$scope', '$http', 'TagsFactory', '$rootScope', function($scope,$http, TagsFactory, root){
+    controller: ['$location','$scope', '$http', 'TagsFactory', '$rootScope', function($location,$scope,$http, TagsFactory, root){
       var self = this;
+      var queryParams = $location.search();
+      var flockEvent = JSON.parse(queryParams.flockEvent);
+      console.log(flockEvent);
       self.selectedtags = [];
+      self.messageDetails.from = flockEvent.userId; self.messageDetails.fromName = flockEvent.userName;
+      self.messageDetails.to = flockEvent.chat; self.messageDetails.toName = flockEvent.chatName;
+      root.userId = flockEvent.userId || 'u:v77sdynhzi74zy44';
+
+
 
         self.allTags = [];
         TagsFactory.get({'userId': root.userId}, function(data) {
