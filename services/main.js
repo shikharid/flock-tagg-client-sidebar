@@ -1,11 +1,11 @@
-var API_URL = "https://32915b8c.ngrok.io/";
 var APP_NAME = "taggApp";
 
 angular.
 	module(APP_NAME).
-	factory('TagsFactory', ['$resource',
-		function ($resource) {
-			return $resource(API_URL + "tag/", {}, {
+	factory('TagsFactory', ['$resource', '$rootScope',
+		function ($resource, $rootScope) {
+
+			return $resource($rootScope.API_URL + "tag/", {}, {
 				get: {
 					method: 'GET',
 					isArray: true
@@ -20,9 +20,10 @@ angular.
 
 angular.
 	module(APP_NAME).
-	factory('SearchFactory', ['$resource',
-		function ($resource) {
-			return $resource(API_URL + "search/:on", {}, {
+	factory('SearchFactory', ['$resource', '$rootScope',
+		function ($resource, $rootScope) {
+
+			return $resource($rootScope.API_URL + "search/:on", {}, {
 				getMessages: {
 					method: 'POST',
 					params: {

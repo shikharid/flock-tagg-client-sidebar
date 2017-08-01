@@ -31,10 +31,9 @@
 
 							<span style="color: #0abe50;">Files</span>
 						</li>
-			    <a ng-repeat="file in files" ng-class="{'fadeOut' : skill.done}"  class="list-group-item" data-ng-click="">
+			    <a ng-repeat="file in files" ng-class="{'fadeOut' : skill.done}"  class="list-group-item btn btn-default" data-ng-click="openUrl(file.file_data)">
 
 			      <span class="trunc">{{file.fileName}}
-			      <button class="btn btn-success btn-xs pull-right" style="padding: 4px; margin-right: 4px;" data-ng-click="openUrl(file.file_data)">open</button>
 			      	</span>
 			    </a>
 			  </ul>
@@ -49,12 +48,16 @@
 
 						<span style="color: #0abe50;">Messages</span>
 					</li>
-		      <a ng-repeat="msg in messages" ng-class="{'fadeOut' : skill.done}"  class="list-group-item" data-ng-click="">
+		      <a ng-repeat-start="msg in messages" ng-class="{'fadeOut' : skill.done}"  class="list-group-item" data-ng-click="msg.show = !msg.show">
 
-		        <span class="trunc">{{msg.message_content}}
-                <button class="btn btn-success btn-xs pull-right" style="padding: 4px; margin-right: 4px;" data-ng-click="copyClipboard">copy</button>
-						</span></span>
+		        <span class="trunc">{{msg.message_content| limitTo: 17 }}{{msg.message_content > 17 ? '...' : ''}}
+						</span>
 		      </a>
+                <li class="list-group-item" ng-repeat-end="" data-ng-show="msg.show">
+                <span style="background-color: lightgray; overflow: auto; min-height: 80px; max-width: 250px;" class="list-group-item" >
+                    {{ ::msg.message_content }}
+                </span>
+                </li>
 		    </ul>
 		</div>
 	</div>

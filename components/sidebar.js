@@ -1,5 +1,4 @@
-'use strict';
-var API_URL = "https://75597844.ngrok.io/";
+
 angular.module('taggApp').filter('propsFilter', function() {
     return function(items, props) {
         var out = [];
@@ -35,9 +34,10 @@ angular.
 module('taggApp').
 component('sidebar', {
     templateUrl: 'templates/sidebar.html',
-    controller: ['$location','$scope', '$http', 'TagsFactory', function($location,$scope,$http, TagsFactory){
+    controller: ['$location','$scope', '$http', 'TagsFactory', '$rootScope', function($location,$scope,$http, TagsFactory, $rootScope){
         var self = this;
         var queryParams = $location.search();
+        var API_URL = $rootScope.API_URL;
         var flockEvent = JSON.parse(queryParams.flockEvent);
         console.log(flockEvent);
         self.selectedtags = [];
